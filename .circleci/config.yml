@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Build and push Docker image
           command: |
-            docker build --pull -t $IMAGE_NAMESPACE/$IMAGE_NAME:$TAG -t $IMAGE_NAMESPACE/$IMAGE_NAME:latest .
+            docker build --build-arg MODS='CalamityMod CalamityModMusic' --pull -t $IMAGE_NAMESPACE/$IMAGE_NAME:$TAG -t $IMAGE_NAMESPACE/$IMAGE_NAME:latest .
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker push $IMAGE_NAMESPACE/$IMAGE_NAME:$TAG
             docker push $IMAGE_NAMESPACE/$IMAGE_NAME:latest
