@@ -2,7 +2,7 @@ FROM alpine:3.15.0 AS base
 
 # Download terraria and tmodloader
 ARG SERVER_VERSION=1432
-ARG SERVER_LINK=https://terraria.org/api/download/pc-dedicated-server/terraria-server-1432.zip
+ARG SERVER_LINK=https://terraria.org/api/download/pc-dedicated-server/terraria-server-$SERVER_VERSION.zip
 ARG TMOD_LINK=https://github.com/tModLoader/tModLoader/releases/download/v0.11.8.5/tModLoader.Linux.v0.11.8.5.tar.gz
 WORKDIR /download
 RUN wget $SERVER_LINK -O terraria-server.zip && \
@@ -20,9 +20,8 @@ RUN apk add --no-cache bash && \
 
 FROM mono:6.12.0.122-slim
 
-ARG SERVER_VERSION=1432
-
 # Install
+ARG SERVER_VERSION=1432
 COPY --from=base /mods/ /mods/
 WORKDIR /bin
 COPY --from=base /download/$SERVER_VERSION/Linux/* ./

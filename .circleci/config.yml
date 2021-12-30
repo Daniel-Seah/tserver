@@ -1,0 +1,27 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.9
+    environment:
+      IMAGE_NAMESPACE: fluffycat
+      IMAGE_NAME: tserver
+    steps:
+      - checkout
+      - setup_remote_docker: {}
+      - run:
+          name: Determine image tag
+          command: |
+            echo 'export TAG=${CIRCLE_BUILD_NUM}' >> $BASH_ENV
+      - run:
+          name: Build and push Docker image
+          command: |
+            docker build --pull -t $IMAGE_NAMESPACE/$IMAGE_NAME:$TAG -t $IMAGE_NAMESPACE/$IMAGE_NAME:latest .
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker push $IMAGE_NAMESPACE/$IMAGE_NAME:$TAG
+            docker push $IMAGE_NAMESPACE/$IMAGE_NAME:latest
+workflows:
+  version: 2
+  test-then-build:
+    jobs:
+      - build
